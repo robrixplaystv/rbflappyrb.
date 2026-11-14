@@ -1,0 +1,76 @@
+[gd_scene load_steps=3 format=3 uid="uid://caeplaa1gbdgn"]
+
+[sub_resource type="GDScript" id="GDScript_avjmv"]
+resource_name = "affafaffa"
+script/source = "extends Node2D
+
+signal passed_by_player 
+
+@export var speed: float = 300.0
+var scored := false
+
+func _ready() -> void:
+	add_to_group(\"pipes\")
+	
+	if has_node(\"Area2D\"):
+		$Area2D.body_entered.connect(_on_body_entered)
+
+func _process(delta: float) -> void:
+	global_position.x -= speed * delta
+	
+	var player = get_tree().get_first_node_in_group(\"player\")
+	
+	# To stop the score from triggering before you die:
+	# We only score if the pipe is past the player AND the player is not dead
+	if player and not player.is_dead and global_position.x < player.global_position.x and global_position.x > 0 and not scored:
+		scored = true
+		print(\">>> PIPE PASSED! GIVING POINT. <<<\")
+		player.add_score()
+		
+	# Only delete when completely off screen
+	if global_position.x < -200:
+		queue_free()
+
+func _on_body_entered(body: Node2D) -> void:
+	if body.name == \"Player\" or body.name == \"CharacterBody2D\":
+		print(\"PIPE HIT PLAYER!\")
+		body.die()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_04rvr"]
+size = Vector2(88, 888)
+
+[node name="Pipe" type="Node2D"]
+process_mode = 3
+position = Vector2(1158, 748)
+script = SubResource("GDScript_avjmv")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="Area2D"]
+offset_left = -95.0
+offset_top = 662.0
+offset_right = -55.0
+offset_bottom = 690.0
+scale = Vector2(2.19705, -31.6292)
+color = Color(1, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-51, 220)
+shape = SubResource("RectangleShape2D_04rvr")
+
+[node name="ColorRect2" type="ColorRect" parent="Area2D"]
+offset_left = -95.0
+offset_top = -440.382
+offset_right = -55.0
+offset_bottom = -412.382
+scale = Vector2(2.19705, -31.6292)
+color = Color(1, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-51, -882.382)
+shape = SubResource("RectangleShape2D_04rvr")
+
+[connection signal="body_entered" from="Area2D" to="Area2D" method="_on_body_entered"]

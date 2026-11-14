@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://ck48dw6mvqn3r"]
+
+[ext_resource type="Texture2D" uid="uid://ggkiublpi804" path="res://icon.svg" id="1_fggid"]
+[ext_resource type="Script" path="res://player.gd" id="1_oqhsx"]
+[ext_resource type="Script" path="res://pipe_spawner.gd" id="3_e7mvl"]
+[ext_resource type="PackedScene" uid="uid://caeplaa1gbdgn" path="res://pipe.tscn" id="4_lj460"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_csyed"]
+size = Vector2(98, 95)
+
+[sub_resource type="LabelSettings" id="LabelSettings_oty5r"]
+font_size = 50
+
+[sub_resource type="LabelSettings" id="LabelSettings_3jtxj"]
+font_size = 150
+
+[node name="Main" type="Node2D"]
+
+[node name="PipeSpawner" type="Node2D" parent="."]
+script = ExtResource("3_e7mvl")
+pipe_scene = ExtResource("4_lj460")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(74, 328)
+scale = Vector2(1.6, 1.6)
+script = ExtResource("1_oqhsx")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_fggid")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(-0.624993, -0.624989)
+scale = Vector2(0.625, 0.625)
+shape = SubResource("RectangleShape2D_csyed")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Score:"
+label_settings = SubResource("LabelSettings_oty5r")
+
+[node name="GameOverLabel" type="Label" parent="CanvasLayer"]
+visible = false
+offset_left = 122.0
+offset_top = 227.0
+offset_right = 942.0
+offset_bottom = 427.0
+text = "GAME OVER"
+label_settings = SubResource("LabelSettings_3jtxj")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -2
+offset_left = -233.0
+offset_top = -299.0
+offset_right = -193.0
+offset_bottom = -259.0
+scale = Vector2(41.7998, 33.8381)
+color = Color(0.642116, 0.74537, 1, 1)
